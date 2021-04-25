@@ -251,14 +251,6 @@ class ClassLikeNodeScanner
                 $storage->parent_classes[$parent_fqcln_lc] = $parent_fqcln;
                 $this->file_storage->required_classes[strtolower($parent_fqcln)] = $parent_fqcln;
             }
-
-            foreach ($node->implements as $interface) {
-                $interface_fqcln = ClassLikeAnalyzer::getFQCLNFromNameObject($interface, $this->aliases);
-                $this->codebase->scanner->queueClassLikeForScanning($interface_fqcln);
-                $storage->class_implements[strtolower($interface_fqcln)] = $interface_fqcln;
-                $storage->direct_class_interfaces[strtolower($interface_fqcln)] = $interface_fqcln;
-                $this->file_storage->required_interfaces[strtolower($interface_fqcln)] = $interface_fqcln;
-            }
         } elseif ($node instanceof PhpParser\Node\Stmt\Interface_) {
             $storage->is_interface = true;
             $this->codebase->classlikes->addFullyQualifiedInterfaceName($fq_classlike_name, $this->file_path);
@@ -275,6 +267,21 @@ class ClassLikeNodeScanner
             $storage->is_trait = true;
             $this->file_storage->has_trait = true;
             $this->codebase->classlikes->addFullyQualifiedTraitName($fq_classlike_name, $this->file_path);
+        } elseif ($node instanceof PhpParser\Node\Stmt\Enum_) {
+            $storage->is_enum = true;
+            $this->codebase->classlikes->addFullyQualifiedEnumName($fq_classlike_name, $this->file_path);
+        } else {
+            throw new \UnexpectedValueException('Unknown classlike type');
+        }
+
+        if ($node instanceof PhpParser\Node\Stmt\Class_ || $node instanceof PhpParser\Node\Stmt\Enum_) {
+            foreach ($node->implements as $interface) {
+                $interface_fqcln = ClassLikeAnalyzer::getFQCLNFromNameObject($interface, $this->aliases);
+                $this->codebase->scanner->queueClassLikeForScanning($interface_fqcln);
+                $storage->class_implements[strtolower($interface_fqcln)] = $interface_fqcln;
+                $storage->direct_class_interfaces[strtolower($interface_fqcln)] = $interface_fqcln;
+                $this->file_storage->required_interfaces[strtolower($interface_fqcln)] = $interface_fqcln;
+            }
         }
 
         $docblock_info = null;
