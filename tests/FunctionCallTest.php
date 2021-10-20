@@ -1662,6 +1662,52 @@ class FunctionCallTest extends TestCase
                     foo(...$arguments);
                     ',
             ],
+            'allowPossiblyUndefinedClassInEnumExists' => [
+                '<?php
+                    if (enum_exists(Foo::class)) {}',
+                'php_version' => '8.1',
+            ],
+            'allowConstructorAfterEnumExists' => [
+                '<?php
+                    function foo(string $s) : void {
+                        if (enum_exists($s)) {
+                            new $s();
+                        }
+                    }',
+                'assertions' => [],
+                'error_levels' => ['MixedMethodCall'],
+                'php_version' => '8.1',
+            ],
+            'refineWithEnumExists' => [
+                '<?php
+                    function foo(string $s) : void {
+                        if (enum_exists($s)) {
+                            new ReflectionClass($s);
+                        }
+                    }',
+                'php_version' => '8.1',
+            ],
+            'refineWithClassExistsOrEnumExists' => [
+                '<?php
+                    function foo(string $s) : void {
+                        if (trait_exists($s) || enum_exists($s)) {
+                            new ReflectionClass($s);
+                        }
+                    }
+
+                    function bar(string $s) : void {
+                        if (enum_exists($s) || trait_exists($s)) {
+                            new ReflectionClass($s);
+                        }
+                    }
+
+                    function baz(string $s) : void {
+                        if (enum_exists($s) || interface_exists($s) || trait_exists($s)) {
+                            new ReflectionClass($s);
+                        }
+                    }',
+                'php_version' => '8.1',
+            ],
         ];
     }
 
