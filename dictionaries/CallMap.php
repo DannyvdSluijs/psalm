@@ -2518,6 +2518,7 @@ return [
 'enchant_dict_store_replacement' => ['void', 'dictionary'=>'resource', 'misspelled'=>'string', 'correct'=>'string'],
 'enchant_dict_suggest' => ['array', 'dictionary'=>'resource', 'word'=>'string'],
 'end' => ['mixed|false', '&r_array'=>'array|object'],
+'enum_exists' => ['bool', 'class'=>'string', 'autoload='=>'bool'],
 'Error::__clone' => ['void'],
 'Error::__construct' => ['void', 'message='=>'string', 'code='=>'int', 'previous='=>'?Throwable|?Error'],
 'Error::__toString' => ['string'],

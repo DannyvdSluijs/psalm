@@ -36,6 +36,7 @@ return [
     'Fiber::getCurrent' => ['?self'],
     'Fiber::suspend' => ['mixed', 'value='=>'null|mixed'],
     'FiberError::__construct' => ['void'],
+    'enum_exists' => ['bool', 'class'=>'string', 'autoload='=>'bool'],
   ],
 
   'changed' => [
