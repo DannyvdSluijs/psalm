@@ -78,7 +78,9 @@ class NamedFunctionCallHandler
             return;
         }
 
-        if ($function_id === 'class_exists') {
+        if ($function_id === 'class_exists'
+            || $function_id === 'enum_exists'
+        ) {
             if ($first_arg) {
                 if ($first_arg->value instanceof PhpParser\Node\Scalar\String_) {
                     if (!$codebase->classlikes->classExists($first_arg->value->value)) {
